@@ -29,8 +29,8 @@ temperature_array_float64_2 = temperature_array_float64_1 + 273.15
 p_array_float64 = p0_array_float64 - p_watch_array_float64
 
 # 数据处理:计算待拟合数据
-lgp_array_float64 = np.log10(p_array_float64)
-temperature_minus_one_array_float64 = 1 / temperature_array_float64_2
+lgp_array_float64 = np.log10(p_array_float64) # 以10为底，log10，即lg
+one_slope_temperature_array_float64 = 1 / temperature_array_float64_2
 
 ans_df = pd.DataFrame({
     "T/℃": temperature_array_float64_1,
@@ -39,19 +39,19 @@ ans_df = pd.DataFrame({
     "p表/kPa": p_watch_array_float64,
     "p/kPa": p_array_float64,
     "lgp/kPa": lgp_array_float64,
-    "1/T/K^-1": temperature_minus_one_array_float64
+    "1/T/K^-1": one_slope_temperature_array_float64
 })
 
 # 计算方差
 variance_lgp = np.var(lgp_array_float64)
-variance_temp_inv = np.var(temperature_minus_one_array_float64)
+variance_temp_inv = np.var(one_slope_temperature_array_float64)
 
 # 计算相关系数
-correlation_coefficient = np.corrcoef(lgp_array_float64, temperature_minus_one_array_float64)[0, 1]
+correlation_coefficient = np.corrcoef(lgp_array_float64, one_slope_temperature_array_float64)[0, 1]
 
 # 线性拟合
-slope, intercept, r_value, p_value, std_err = linregress(temperature_minus_one_array_float64, lgp_array_float64)
-fit_polynomial = slope * temperature_minus_one_array_float64 + intercept
+slope, intercept, r_value, p_value, std_err = linregress(one_slope_temperature_array_float64, lgp_array_float64)
+fit_polynomial = slope * one_slope_temperature_array_float64 + intercept
 
 # 计算残差和残差方差
 residuals = lgp_array_float64 - fit_polynomial
@@ -100,8 +100,8 @@ plt.gca().spines['bottom'].set_linewidth(1.25)
 plt.gca().spines['left'].set_linewidth(1.25)
 plt.gca().spines['right'].set_linewidth(1.25)
 
-plt.scatter(temperature_minus_one_array_float64, lgp_array_float64, color='red', label='数据点')
-plt.plot(temperature_minus_one_array_float64, fit_polynomial, color='black', label='拟合直线')
+plt.scatter(one_slope_temperature_array_float64, lgp_array_float64, color='red', label='数据点')
+plt.plot(one_slope_temperature_array_float64, fit_polynomial, color='black', label='拟合直线')
 plt.title('$lg(p) - \\frac{1}{T}$')
 plt.xlabel('$\\frac{1}{T}$    单位：$K^{-1}$')
 plt.ylabel('$lg(p)$    单位：$Kpa$')
