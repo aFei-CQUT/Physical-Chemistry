@@ -1,12 +1,3 @@
-# This project is created by aFei-CQUT
-# ------------------------------------------------------------------------------------------------------------------------------------
-#   About aFei-CQUT
-# - Interests&Hobbies: Programing,  ChatGPT,  Reading serious books,  Studying academical papers.
-# - CurrentlyLearning: Mathmodeling，Python and Mathmatica (preparing for National College Mathematical Contest in Modeling).
-# - Email:2039787966@qq.com
-# - Pronouns: Chemical Engineering, Computer Science, Enterprising, Diligent, Hard-working, Sophomore,Chongqing Institute of Technology,
-# - Looking forward to collaborating on experimental data processing of chemical engineering principle
-# ------------------------------------------------------------------------------------------------------------------------------------
 import pandas as pd
 import numpy as np
 
@@ -17,10 +8,11 @@ def calculate_electrode_potential(file_path):
     df = pd.read_excel(file_path, sheet_name=sheet_names[0], header=None)
 
     # 电势原始数据
-    e = df.iloc[1:, 1:].values
+    e = df.iloc[1:, 1:].values.astype(float)
+    e = np.round(e, 6)  # 保留6位小数
 
     # 数据预处理:计算平均值
-    e_mean = np.mean(e, axis=0)
+    e_mean = np.round(np.mean(e, axis=0), 6)  # 保留6位小数
 
     # 创建数据表格
     title = ["序号/项目", "e_Zn_Hg", "e_Cu_Zn", "e_Cu_Hg"]
@@ -31,30 +23,30 @@ def calculate_electrode_potential(file_path):
     ans_data_preprocess_df = pd.DataFrame(data_preprocess_array, columns=title)
 
     # 常量
-    T = 16.6 + 273.15
-    R = 8.314
-    F = 96485
-    a_Cu = 0.1000 * 0.150
-    a_Zn = 0.1000 * 0.150
+    T = round(16.6 + 273.15, 6)
+    R = 8.314000
+    F = 96485.000000
+    a_Cu = round(0.1000 * 0.150, 6)
+    a_Zn = round(0.1000 * 0.150, 6)
     α_Cu = -0.000016
-    β_Cu = 0
-    α_Zn = 0.0001
-    β_Zn = 0.62 * 10**-6
-    φ_sec = 0.2415 - 7.61 * 10**-4 * (T - 298)
+    β_Cu = 0.000000
+    α_Zn = 0.000100
+    β_Zn = round(0.62 * 10**-6, 6)
+    φ_sec = round(0.2415 - 7.61 * 10**-4 * (T - 298), 6)
 
     # 计算过程
-    φ_Zn = φ_sec - e_mean[0]
-    φ_Cu = φ_sec + e_mean[2]
+    φ_Zn = round(φ_sec - e_mean[0], 6)
+    φ_Cu = round(φ_sec + e_mean[2], 6)
 
-    φ_theta_Cu = φ_Cu + (R * T) / (2 * F) * np.log(1 / a_Cu)
-    φ_theta_Zn = φ_Zn + (R * T) / (2 * F) * np.log(1 / a_Zn)
+    φ_theta_Cu = round(φ_Cu + (R * T) / (2 * F) * np.log(1 / a_Cu), 6)
+    φ_theta_Zn = round(φ_Zn + (R * T) / (2 * F) * np.log(1 / a_Zn), 6)
 
-    φ_theta_Cu_298K = φ_theta_Cu - α_Cu * (T - 298) - 1/2 * β_Cu * (T - 298)**2
-    φ_theta_Zn_298K = φ_theta_Zn - α_Zn * (T - 298) - 1/2 * β_Zn * (T - 298)**2
+    φ_theta_Cu_298K = round(φ_theta_Cu - α_Cu * (T - 298) - 1/2 * β_Cu * (T - 298)**2, 6)
+    φ_theta_Zn_298K = round(φ_theta_Zn - α_Zn * (T - 298) - 1/2 * β_Zn * (T - 298)**2, 6)
 
-    e_measure = e_mean[1]
-    e_standard = φ_theta_Cu_298K - φ_theta_Zn_298K
-    Er = np.abs(e_measure - e_standard) / e_standard * 100
+    e_measure = round(e_mean[1], 6)
+    e_standard = round(φ_theta_Cu_298K - φ_theta_Zn_298K, 6)
+    Er = round(np.abs(e_measure - e_standard) / e_standard * 100, 6)
 
     # 创建 ans_parameter_values_df 结构
     ans_parameter_values_df = pd.DataFrame([
@@ -69,7 +61,6 @@ def calculate_electrode_potential(file_path):
         {"Description": "计算所得铜锌原电池标准电动势", "Variable": "e_standard", "Value": e_standard},
         {"Description": "相对误差", "Variable": "Er", "Value": Er}
     ])
-
     return ans_data_preprocess_df, ans_parameter_values_df
 
 # 调用函数
@@ -113,7 +104,7 @@ ax2.set_title('电势计算结果', fontsize=12)
 # 调整子图之间的间距
 plt.subplots_adjust(hspace=-0.3)
 
-plt.savefig(r'./拟合图结果/1.png', dpi=300)
+plt.savefig(r'./拟合图结果/1.png', dpi=500)
 
 # 显示图表
 plt.show()
