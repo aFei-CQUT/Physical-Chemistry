@@ -7,7 +7,7 @@ from matplotlib import rcParams
 import zipfile
 import os
 
-class CombustionHeatAnalysis:
+class CombustionHeatDataProcessor:
     """
     燃烧热分析类
     
@@ -148,6 +148,7 @@ class CombustionHeatAnalysis:
                  bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
     
         plt.legend(loc='upper left')
+        plt.show()
         plt.savefig(fr'./拟合图结果/{self.arc_name}', dpi=300)
         plt.close()
 
@@ -184,18 +185,20 @@ class CombustionHeatAnalysis:
 
         print(f'压缩完成，文件保存为: {dir_to_save}')
 
-# 主程序
-file_dir = r'./燃烧热的测定原始记录表(非).xlsx'
-sheet_names = pd.ExcelFile(file_dir).sheet_names
+if __name__ == '__main__':
 
-ans_benzoic_acid_origin_data_df = pd.read_excel(file_dir, sheet_name=sheet_names[0], header=None)
-ans_naphthalene_origin_data_df = pd.read_excel(file_dir, sheet_name=sheet_names[1], header=None)
+    # 主程序
+    file_dir = r'./燃烧热的测定原始记录表(非).xlsx'
+    sheet_names = pd.ExcelFile(file_dir).sheet_names
 
-data_benzoic_acid_temperature = np.array(ans_benzoic_acid_origin_data_df.iloc[3:, 2].values, dtype=float)
-data_naphthalene_temperature = np.array(ans_naphthalene_origin_data_df.iloc[3:, 2].values, dtype=float)
+    ans_benzoic_acid_origin_data_df = pd.read_excel(file_dir, sheet_name=sheet_names[0], header=None)
+    ans_naphthalene_origin_data_df = pd.read_excel(file_dir, sheet_name=sheet_names[1], header=None)
 
-benzoic_acid_analysis = CombustionHeatAnalysis(data_benzoic_acid_temperature, 'Benzoic acid', '苯甲酸燃烧热的测定')
-naphthalene_analysis = CombustionHeatAnalysis(data_naphthalene_temperature, 'Naphthalene', '萘燃烧热的测定')
+    data_benzoic_acid_temperature = np.array(ans_benzoic_acid_origin_data_df.iloc[3:, 2].values, dtype=float)
+    data_naphthalene_temperature = np.array(ans_naphthalene_origin_data_df.iloc[3:, 2].values, dtype=float)
 
-# 压缩结果
-benzoic_acid_analysis.compress_results()
+    benzoic_acid_data_processor = CombustionHeatDataProcessor(data_benzoic_acid_temperature, 'Benzoic acid', '苯甲酸燃烧热的测定')
+    naphthalene_data_processor = CombustionHeatDataProcessor(data_naphthalene_temperature, 'Naphthalene', '萘燃烧热的测定')
+
+    # 压缩结果
+    benzoic_acid_data_processor.compress_results()

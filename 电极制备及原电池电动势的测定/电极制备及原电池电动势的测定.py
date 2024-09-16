@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import zipfile
 import os
 
-class ElectrodeCalculator:
+class ElectrodeDataProcessor:
     """
     电极电势计算器类
 
@@ -129,7 +129,10 @@ class ElectrodeCalculator:
         # 调整子图之间的间距
         plt.subplots_adjust(hspace=-0.3)
 
+        plt.show()
+        
         plt.savefig(save_path, dpi=500)
+        
         plt.close()
 
     @staticmethod
@@ -155,10 +158,10 @@ def main():
     主函数
     """
     file_path = r'./电极制备及原电池电动势原始记录表(非).xlsx'
-    calculator = ElectrodeCalculator(file_path)
-    calculator.calculate_electrode_potential()
-    calculator.plot_results(r'./拟合图结果/1.png')
-    calculator.compress_results(r'./拟合图结果', r'./拟合图结果.zip')
+    electrode_data_processor = ElectrodeDataProcessor(file_path)
+    electrode_data_processor.calculate_electrode_potential()
+    electrode_data_processor.plot_results(r'./拟合图结果/1.png')
+    electrode_data_processor.compress_results(r'./拟合图结果', r'./拟合图结果.zip')
 
 if __name__ == "__main__":
     main()

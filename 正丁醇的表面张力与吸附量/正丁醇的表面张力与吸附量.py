@@ -4,7 +4,7 @@ import pandas as pd
 import zipfile
 import os
 
-class SurfaceTensionAnalyzer:
+class SurfaceTensionDataProcessor:
     """
     表面张力和吸附量分析类
 
@@ -134,7 +134,7 @@ class SurfaceTensionAnalyzer:
 
         print(f'压缩完成，文件保存为: {dir_to_save}')
 
-    def run_analysis(self):
+    def run_process(self):
         """运行完整的分析流程"""
         self.load_data()
         self.calculate_K()
@@ -149,5 +149,5 @@ class SurfaceTensionAnalyzer:
 
 # 使用示例
 if __name__ == "__main__":
-    analyzer = SurfaceTensionAnalyzer(r'./正丁醇的表面张力与吸附量原始记录表(非).xlsx', degree_fit1=1, degree_fit2=1)
-    analyzer.run_analysis()
+    surface_tension_data_processor = SurfaceTensionDataProcessor(r'./正丁醇的表面张力与吸附量原始记录表(非).xlsx', degree_fit1=1, degree_fit2=1)
+    surface_tension_data_processor.run_process()

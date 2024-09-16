@@ -5,7 +5,7 @@ from scipy.stats import linregress
 import zipfile
 import os
 
-class SaturatedVaporPressureAnalysis:
+class SaturatedVaporPressureDataProcessor:
     """
     静态法测量液体饱和蒸气压的分析类
     
@@ -25,7 +25,7 @@ class SaturatedVaporPressureAnalysis:
         self.standard_vap_enthalpy = 30.81 * 1000  # 标准摩尔蒸发焓
         self.load_data()
         self.process_data()
-        self.perform_analysis()
+        self.perform_processor()
 
     def load_data(self):
         """从Excel文件加载原始数据"""
@@ -42,7 +42,7 @@ class SaturatedVaporPressureAnalysis:
         self.lgp = np.log10(self.p)
         self.inv_temperature = 1 / self.temperature_kelvin
 
-    def perform_analysis(self):
+    def perform_processor(self):
         """执行数据分析的主要流程"""
         self.calculate_statistics()
         self.perform_linear_regression()
@@ -141,8 +141,10 @@ class SaturatedVaporPressureAnalysis:
         print(f'压缩完成，文件保存为: {dir_to_save}')
 
 # 主程序
-file_dir = './静态法测液体的饱和蒸气压原始记录表(非).xlsx'
-analysis = SaturatedVaporPressureAnalysis(file_dir)
-analysis.print_results()
-analysis.plot_results()
-analysis.compress_results()
+if __name__ == '__main__':
+
+    file_dir = './静态法测液体的饱和蒸气压原始记录表(非).xlsx'
+    saturated_vapor_pressure_data_processor = SaturatedVaporPressureDataProcessor(file_dir)
+    saturated_vapor_pressure_data_processor.print_results()
+    saturated_vapor_pressure_data_processor.plot_results()
+    saturated_vapor_pressure_data_processor.compress_results()
